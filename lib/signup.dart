@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chapter_10/uploadimage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 class SignupScreen extends StatefulWidget {
@@ -10,6 +11,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  String message='';
   TextEditingController emailController=TextEditingController();
   TextEditingController passwordController=TextEditingController();
   void login(String email,password)async {
@@ -24,12 +26,20 @@ class _SignupScreenState extends State<SignupScreen> {
       if(response.statusCode==200){
         var data=jsonDecode(response.body.toString());
         print(data);
-        print('Account created sucessfully');
+        message='Account Created ! Click Login';
+        setState(() {
+
+        });
 
       }
       else{
         print('Failed');
       }
+      Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          message = '';
+        });
+      });
 
 
     }
@@ -113,21 +123,54 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 20,),
+                    Center(child: Text(message.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)),
                     SizedBox(height: 40,),
-                    GestureDetector(
-                      onTap: (){
-                        login(emailController.text.toString(), passwordController.text.toString());},
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(15),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(children: [
+                        Expanded(
+                          flex:1,
+                          child: GestureDetector(
+                            onTap: (){
+                              login(emailController.text.toString(), passwordController.text.toString());},
+                            child: Container(
+                              height: 50,
+
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text('SignUp',
+                                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                              ),
+                            ),
+                          ),
                         ),
-                        child: Center(
-                          child: Text('SignUp',
-                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                        SizedBox(width: 50,),
+                        Expanded(
+                          flex: 1,
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadImage()));
+                              },
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text('Login',
+                                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],),
                     )
 
                   ],

@@ -16,6 +16,7 @@ class _UploadImageState extends State<UploadImage> {
   File? image;
   final _picker=ImagePicker();
   bool showSpinner=false;
+  String message='';
   Future getImage()async{
     final pickedFile= await _picker.pickImage(source: ImageSource.gallery,imageQuality: 80);
     if(pickedFile!= null){
@@ -45,7 +46,7 @@ class _UploadImageState extends State<UploadImage> {
     request.files.add(multiport);
     var response =await request.send();
     if(response.statusCode==200){
-      print('image uploaded');
+      message='Image Uploaded';
       setState(() {
         showSpinner:false;
       });
@@ -56,6 +57,11 @@ class _UploadImageState extends State<UploadImage> {
         showSpinner:false;
       });
     }
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        message = '';
+      });
+    });
   }
 
   @override
@@ -101,11 +107,16 @@ class _UploadImageState extends State<UploadImage> {
 
               ),
             ),
-            SizedBox(height: 100,),
+            SizedBox(height: 30,),
+
+            Center(child: Text(message.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),)),
+            SizedBox(height: 80,),
+
             InkWell(
               onTap:
               (){
-
+                uploadImage();
               },
               child: Container(
                 height: 50,
